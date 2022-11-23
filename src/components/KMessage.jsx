@@ -1,12 +1,20 @@
 import React from "react";
-import { ErrorMessage } from "formik";
+import Select from "react-select";
 
-const KMessage = ({ name }) => {
+export default ({ onChange, options, value, className }) => {
+  const defaultValue = (options, value) => {
+    return options ? options.find((option) => option.value === value) : "";
+  };
+
   return (
-    <div style={{ color: "red" }}>
-      <ErrorMessage name={name} />
+    <div className={className}>
+      <Select
+        value={defaultValue(options, value)}
+        onChange={(value) => {
+          onChange(value);
+        }}
+        options={options}
+      />
     </div>
   );
 };
-
-export default KMessage;

@@ -1,217 +1,206 @@
 import React from "react";
-import { Formik, Form, Field, ErrorMessage } from "formik";
-import KMessage from "./KMessage";
-import * as yup from "yup";
-// const initialValues = {
-//   uname: "",
-//   pswd: "",
-//   options: [],
-//   select: "",
-//   gender: "",
-//   darkmode: "",
-// };
-const validationSchema = yup.object({
-  uname: yup.string().required("UserName is Required!"),
-  pswd: yup
-    .string()
-    .min(3, "Password must be 3 characters at minimum")
+import { Formik, Form, Field, ErrorMessage, validateYupSchema } from "formik";
+import * as Yup from "yup";
+import "bootstrap/dist/css/bootstrap.css";
+import "../App.css";
+
+const LoginSchema = Yup.object().shape({
+  email: Yup.string()
+    .email("Invalid email address format")
+    .required("Email is required"),
+  password: Yup.string()
+    .min(7, "Password must be 7 characters at minimum")
     .required("Password is required"),
-  gender: yup.string().required("must be select"),
+  phone: Yup.string()
+    .min(10, "Phone Number should be minimum 10 digit")
+    .required("Phone Number is required"),
+  rememberMe: Yup.bool().oneOf(
+    [true],
+    "You need to accept the terms and conditions"
+  ),
+  category: Yup.string().required("Select first"),
+  gender: Yup.string().required("Gender must be select"),
+  togglebutton: Yup.boolean().oneOf([true]).required("You need to Switch"),
 });
-function Morden() {
+
+const Morden = () => {
   return (
-    <div className="container ">
+    <div className="container">
       <div className="row">
-        <div className="col-md-6 bg-light">
+        <div className="col-md-2"></div>
+        <div className="col-lg-8">
           <Formik
-            validationSchema={validationSchema}
             initialValues={{
-              uname: "",
-              pswd: "",
-              selectedOption: "",
-              options: [],
+              email: " ",
+              password: "",
+              phone: "",
+              rememberMe: false,
+              selectOption: "",
               gender: "",
-              darkmode: "",
+              category: "",
+              togglebutton: "",
             }}
+            validationSchema={LoginSchema}
             onSubmit={(values) => {
               console.log(values);
+              alert("Form is validated! Submitting the form...");
             }}
           >
-            {/* {({ values }) => { */}
-            <Form>
-              <div class="mb-3 mt-3">
-                <label for="uname" class="form-label">
-                  Username:
-                </label>
-                <Field name="uname" type="text" />
-                <KMessage name="uname" />
-              </div>
+            {({
+              touched,
+              errors,
+              isSubmitting,
+              values,
+              handleChange,
+              handleBlur,
+            }) => (
+              <div>
+                <div className="row mb-5">
+                  <div className="col-lg-12 text-center">
+                    <h1 className="mt-5">Formik Form</h1>
+                  </div>
+                </div>
+                <Form>
+                  <div className="form-group">
+                    <label htmlFor="email">
+                      <strong>Email</strong>
+                    </label>
+                    <Field
+                      type="email"
+                      name="email"
+                      placeholder="Enter email"
+                      autoComplete="off"
+                      className={`mt-2 form-control
+                          ${touched.email && errors.email ? "is-invalid" : ""}`}
+                    />
+                    <ErrorMessage
+                      component="div"
+                      name="email"
+                      className="invalid-feedback"
+                    />
+                  </div>
+                  <div className="form-group">
+                    <label htmlFor="password" className="mt-3">
+                      <strong> Password</strong>
+                    </label>
+                    <Field
+                      type="password"
+                      name="password"
+                      placeholder="Enter password"
+                      className={`mt-2 form-control
+                          ${
+                            touched.password && errors.password
+                              ? "is-invalid"
+                              : ""
+                          }`}
+                    />
+                    <ErrorMessage
+                      component="div"
+                      name="password"
+                      className="invalid-feedback"
+                    />
+                  </div>
+                  <div className="form-group mt-4">
+                    <label htmlFor="phone">
+                      <strong>Phone Number</strong>
+                    </label>
+                    <Field
+                      type="number"
+                      name="phone"
+                      placeholder="Enter phone"
+                      autoComplete="off"
+                      className={`mt-2 form-control
+                          ${touched.phone && errors.phone ? "is-invalid" : ""}`}
+                    />
+                    <ErrorMessage
+                      component="div"
+                      name="phone"
+                      className="invalid-feedback"
+                    />
+                  </div>
+                  <div>
+                    <div className="form-group mt-4">
+                      <label htmlFor="category">
+                        <strong> Choose your browser from the list:</strong>
+                      </label>
+                      <select
+                        id="category"
+                        name="category"
+                        className={`mt-2 form-control
+                         ${
+                           touched.category && errors.category
+                             ? "is-invalid"
+                             : ""
+                         }`}
+                        onChange={handleChange}
+                        onBlur={handleBlur}
+                        value={values.category}
+                      >
+                        <option value="">Select</option>
+                        <option value="Chrome">Chrome</option>
+                        <option value="Firefox">Firefox</option>
+                        <option value="Opera">Opera</option>
+                        <option value="Safari">Safari</option>
+                      </select>
+                    </div>
+                  </div>
+                  <div className="mt-4">
+                    <label className="me-3">
+                      <strong>Select Gender :</strong>
+                    </label>
 
-              <div class="mb-3">
-                <label for="pwd" class="form-label">
-                  Password:
-                </label>
-                <Field name="pswd" type="password" />
-                <KMessage name="pswd" />
+                    <label className="me-3">
+                      Female
+                      <Field type="radio" name="gender" value="Female" />
+                    </label>
+                    <label className="ms-3">
+                      Male
+                      <Field type="radio" name="gender" value="Male" />
+                    </label>
+                    {errors.gender && (
+                      <p style={{ color: "#dc3545" }}>{errors.gender}</p>
+                    )}
+                  </div>
+                  <div className="mt-4">
+                    <label className="form-check form-switch">
+                      <Field
+                        type="checkbox"
+                        name="togglebutton"
+                        className="form-check-input"
+                      />
+                      <label class="form-check-label" for="mySwitch">
+                        <strong>Dark Mode</strong>
+                      </label>
+                    </label>
+                    {errors.togglebutton && (
+                      <p style={{ color: "#dc3545" }}>{errors.togglebutton}</p>
+                    )}
+                  </div>
+
+                  <div className="mt-2">
+                    <label className="ms-4">
+                      <strong> Term and Conditions</strong>
+                      <Field type="checkbox" name="rememberMe" />
+                    </label>
+                    {errors.rememberMe && (
+                      <p style={{ color: "#dc3545" }}>{errors.rememberMe}</p>
+                    )}
+                  </div>
+                  <button
+                    type="submit"
+                    className="btn btn-primary btn-block mt-4"
+                  >
+                    Submit
+                  </button>
+                </Form>
               </div>
-              <div className="form-group">
-                <div className="form-check">
-                  {/* <Field name="options" value="opt" /> */}
-                  <input
-                    type="checkbox"
-                    class="form-check-input"
-                    id="check1"
-                    name="options"
-                    value=""
-                  />
-                  <label class="form-check-label" for="check1">
-                    Option 1
-                  </label>
-                </div>
-                <div class="form-check">
-                  <input
-                    type="checkbox"
-                    class="form-check-input"
-                    id="check2"
-                    name="options"
-                    value="option2"
-                  />
-                  <label class="form-check-label" for="check2">
-                    Option 2
-                  </label>
-                </div>
-                <div class="form-check">
-                  <input
-                    type="checkbox"
-                    class="form-check-input"
-                    id="check3"
-                    name="options"
-                    value="option3"
-                  />
-                  <label class="form-check-label" for="check3">
-                    Option 3
-                  </label>
-                </div>
-              </div>
-              <div className="form-group">
-                {/* <select
-                  class="form-select form-select-lg mb-3"
-                  aria-label=".form-select-lg example"
-                  name="select"
-                  // value={select}
-                > */}
-                <Field name="selectedOption" as="select">
-                  <option selected>Select the option</option>
-                  <option value="One">One</option>
-                  <option value="Two">Two</option>
-                  <option value="Three">Three</option>
-                </Field>
-              </div>
-              <div className="form-group">
-                <div class="form-check">
-                  <Field name="gender" value="female" type="radio" />
-                  <label class="form-check-label ml-6" for="flexRadioDefault1">
-                    Female
-                  </label>
-                </div>
-                <div class="form-check">
-                  <Field name="gender" value="male" type="radio" />
-                  <label class="form-check-label ml-6" for="flexRadioDefault2">
-                    Male
-                  </label>
-                </div>
-              </div>
-              <br />
-              <div className="form-group">
-                <div class="form-check form-switch">
-                  <input
-                    class="form-check-input"
-                    type="checkbox"
-                    id="mySwitch"
-                    name="darkmode"
-                    value="false"
-                  />
-                  <label class="form-check-label" for="mySwitch">
-                    Dark Mode
-                  </label>
-                </div>
-              </div>
-              <button type="submit" class="btn btn-primary">
-                Submit
-              </button>
-            </Form>
+            )}
           </Formik>
-          {/* <form action="/action_page.php">
-            <div class="mb-3 mt-3">
-              <label for="email">Email:</label>
-              <input
-                type="email"
-                class="form-control"
-                id="email"
-                placeholder="Enter email"
-                name="email"
-              />
-            </div>
-            <div class="form-check">
-              <input
-                type="radio"
-                class="form-check-input"
-                id="radio1"
-                name="optradio"
-                value="option1"
-                checked
-              />
-              <label class="form-check-label" for="radio1">
-                Option 1
-              </label>
-            </div>
-            <div class="form-check">
-              <input
-                type="radio"
-                class="form-check-input"
-                id="radio2"
-                name="optradio"
-                value="option2"
-              />
-              <label class="form-check-label" for="radio2">
-                Option 2
-              </label>
-            </div>
-            <div class="form-check">
-              <input type="radio" class="form-check-input" />
-              <label class="form-check-label">Option 3</label>
-            </div>
-            <div class="mb-3 text-left">
-              <label for="pwd" className="text-left">
-                Password:
-              </label>
-              <input
-                type="password"
-                class="form-control"
-                id="pwd"
-                placeholder="Enter password"
-                name="pswd"
-              />
-            </div>
-
-            <div class="form-check mb-3">
-              <label class="form-check-label">
-                <input
-                  class="form-check-input"
-                  type="checkbox"
-                  name="remember"
-                />
-                Remember me
-              </label>
-            </div>
-            <button type="submit" class="btn btn-primary">
-              Submit
-            </button>
-          </form> */}
         </div>
+        <div className="col-md-2"></div>
       </div>
     </div>
   );
-}
+};
 
 export default Morden;
