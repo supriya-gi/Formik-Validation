@@ -9,10 +9,10 @@ const LoginSchema = Yup.object().shape({
     .email("Invalid email address format")
     .required("Email is required"),
   password: Yup.string()
-    .required("Please Enter your password")
+    .required("Password is required")
     .matches(
-      " /^(?=.*[A-Za-z])(?=.*d)(?=.*[@$!%*#?&])[A-Za-zd@$!%*#?&]{8,}$/",
-      "Must Contain 8 Characters, One Uppercase, One Lowercase, One Number and one special case Character"
+      /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{8,})/,
+      "Must Contain 8 Characters, One Uppercase, One Lowercase, One Number and One Special Case Character"
     ),
   phone: Yup.string()
     .max(10, "Phone Number should be minimum 10 digit")
@@ -84,7 +84,7 @@ const Morden = () => {
                   </div>
                   <div className="form-group">
                     <label htmlFor="password" className="mt-3">
-                      <strong> Password</strong>
+                      <strong> password</strong>
                     </label>
                     <Field
                       type="password"
