@@ -9,10 +9,13 @@ const LoginSchema = Yup.object().shape({
     .email("Invalid email address format")
     .required("Email is required"),
   password: Yup.string()
-    .min(7, "Password must be 7 characters at minimum")
-    .required("Password is required"),
+    .required("Please Enter your password")
+    .matches(
+      " /^(?=.*[A-Za-z])(?=.*d)(?=.*[@$!%*#?&])[A-Za-zd@$!%*#?&]{8,}$/",
+      "Must Contain 8 Characters, One Uppercase, One Lowercase, One Number and one special case Character"
+    ),
   phone: Yup.string()
-    .min(10, "Phone Number should be minimum 10 digit")
+    .max(10, "Phone Number should be minimum 10 digit")
     .required("Phone Number is required"),
   rememberMe: Yup.bool().oneOf(
     [true],
