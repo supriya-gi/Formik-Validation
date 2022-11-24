@@ -10,13 +10,15 @@ const LoginSchema = Yup.object().shape({
     .required("Email is required"),
   password: Yup.string()
     .required("Password is required")
+    .max(20, "Password is should be maximun 20 characters.")
     .matches(
       /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{8,})/,
       "Must Contain 8 Characters, One Uppercase, One Lowercase, One Number and One Special Case Character"
     ),
   phone: Yup.string()
-    .max(10, "Phone Number should be minimum 10 digit")
-    .required("Phone Number is required"),
+    .required("Phone Number is required")
+    .max(10, "Phone Number should be minimum 10 digit"),
+
   rememberMe: Yup.bool().oneOf(
     [true],
     "You need to accept the terms and conditions"
